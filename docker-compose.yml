@@ -7,5 +7,15 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./client:/app
+    depends_on:
+      - api
     ports:
       - "3000:3000"
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./api:/app
+    ports:
+      - "8000:8000"
