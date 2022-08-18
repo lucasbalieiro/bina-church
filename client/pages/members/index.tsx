@@ -2,8 +2,22 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Link from 'next/link';
 import { BsTrashFill, BsPenFill } from "react-icons/bs"
+import { MemberResponseData } from '../../types/Member';
+import { useEffect, useState } from 'react';
 
 const ListMembers = () => {
+
+    const [members, setMembers] = useState<MemberResponseData[]>([]);
+
+    const fetchMembers = async () => {
+        const response = await fetch('http://localhost:8000/members/');
+        const data = await response.json();
+        setMembers(data);
+    }
+    useEffect(() => {
+        fetchMembers();
+    } , []);
+
     return (
         <Table responsive striped bordered hover>
             <thead>
@@ -19,25 +33,29 @@ const ListMembers = () => {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>R. Grp, 154 - Redencao</td>
-                    <td>01/01/2000</td>
-                    <td>Reconciliacao</td>
-                    <td>(31) 9 9999-9999</td>
-                    <td>Lideranca 1</td>
-                    <td>
-                        <Link href="/members/edit/1">
-                            <Button variant='primary' size='sm'>
-                                <BsPenFill />
-                            </Button>
-                        </Link>{' '}
-                        <Link href="/members/delete/1">
-                            <Button variant='danger' size='sm'><BsTrashFill /></Button>
-                        </Link>
-                    </td>
-                </tr>
+                {members.map((member: MemberResponseData, index) => (
+                    <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{member.name}</td>
+                        <td>{member.address}</td>
+                        <td>{member.birthdate}</td>
+                        <td>{member.situation}</td>
+                        <td>{member.phone}</td>
+                        <td>{member.leader}</td>
+                        <td>
+                            <Link href={`/members/edit/${member.id}`}>
+                                <Button variant="primary"><BsPenFill /></Button>
+                            </Link>
+                            <Button variant="danger" onClick={() => {
+                                if (window.confirm('Deseja realmente excluir este membro?')) {
+                                    fetch(`http://localhost:8000/members/${member.id}`, {
+                                        method: 'DELETE'
+                                    })
+                                }
+                            }}><BsTrashFill /></Button>
+                        </td>
+                    </tr>
+                ))}
             </tbody>
         </Table>
     );
