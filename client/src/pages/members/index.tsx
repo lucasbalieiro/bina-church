@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { BsTrashFill, BsPenFill } from "react-icons/bs"
 import { MemberResponseData } from '../../types/Member';
 import { useEffect, useState } from 'react';
+import { DeleteModal } from '../../components/DeleteModal'
 
 const ListMembers = () => {
 
@@ -16,7 +17,7 @@ const ListMembers = () => {
     }
     useEffect(() => {
         fetchMembers();
-    } , []);
+    }, []);
 
     return (
         <Table responsive striped bordered hover>
@@ -46,13 +47,7 @@ const ListMembers = () => {
                             <Link href={`/members/edit/${member.id}`}>
                                 <Button variant="primary"><BsPenFill /></Button>
                             </Link>
-                            <Button variant="danger" onClick={() => {
-                                if (window.confirm('Deseja realmente excluir este membro?')) {
-                                    fetch(`http://localhost:8000/members/${member.id}`, {
-                                        method: 'DELETE'
-                                    })
-                                }
-                            }}><BsTrashFill /></Button>
+                            <DeleteModal name={member.name} />
                         </td>
                     </tr>
                 ))}
