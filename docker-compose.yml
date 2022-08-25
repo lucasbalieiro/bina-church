@@ -15,7 +15,17 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile.dev
+    depends_on:
+      - db
     volumes:
       - ./api:/app
     ports:
       - "8000:8000"
+
+  db:
+    build:
+      context: ./api/app/db
+    environment:
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: appuser
+      POSTGRES_DB: application
