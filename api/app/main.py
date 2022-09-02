@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from app.routes import router_index
 from fastapi.middleware.cors import CORSMiddleware
+from app.config import settings
 
 def create_app():
     app = FastAPI(
-        title="Bina-Church API"
+        title="Bina-Church API",
+        version="0.1.0"
     )
 
     app.include_router(router_index.router)
@@ -18,7 +20,8 @@ def create_app():
 
     @app.get("/")
     def root():
-        return {"message": "Hello World"}
+        return {"message": "Welcome to Bina-Church API", "settings": settings.get_settings()}
+
 
     return app
 
