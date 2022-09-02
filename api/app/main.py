@@ -18,11 +18,10 @@ def create_app():
         allow_headers=["*"],
     )
 
-    @app.get("/")
-    def root():
-        return {"message": "Welcome to Bina-Church API", "settings": settings.get_settings()}
-
-
     return app
 
 app = create_app()
+
+@app.get("/")
+def root():
+    return {"message": "Welcome to Bina-Church API", "settings": settings.get_settings()}
